@@ -10,8 +10,10 @@ repositories {
 }
 
 dependencies {
+    //slack api
     implementation 'com.slack.api:slack-api-client:1.27.1'
     implementation 'com.slack.api:slack-api-model:1.27.1'
+
     implementation 'com.squareup.okhttp3:okhttp:4.10.0'
     implementation 'org.slf4j:slf4j-simple:1.6.1'
 
