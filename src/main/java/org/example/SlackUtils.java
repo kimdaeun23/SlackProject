@@ -6,18 +6,20 @@ import com.slack.api.webhook.WebhookResponse;
 import java.io.IOException;
 
 public class SlackUtils {
-    private final static String webhookUrl = "https://hooks.slack.com/services/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";
+    private final static String webhookUrl = "https://hooks.slack.com/services/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";
 
-    public static WebhookResponse send(String text) {
+    public static WebhookResponse send(SlackMessage slackMessage) {
         try {
             WebhookResponse response = null;
             Slack slack = Slack.getInstance();
-            Payload payload = Payload.builder().text(text).build();
+            String message=slackMessage.getUsername()+" : "+slackMessage.getText()+" "+slackMessage.getIcon_emoji();
+            Payload payload = Payload.builder().text(message).build();
             response = slack.send(webhookUrl, payload);
             return response;
         }
         catch (IOException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
+        return null;
     }
 }

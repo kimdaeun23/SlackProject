@@ -1,26 +1,21 @@
 package org.example;
 
-import lombok.*;
-
 import java.io.Serializable;
 
-@AllArgsConstructor
-@Builder(builderClassName = "Builder")
-@Getter
-@Setter
 public class SlackMessage implements Serializable {
 
-    private String channel;
-    private String username;
-    private String text;
-    private String icon_emoji;
+    private String username="";
+    private String text="";
+    private String icon_emoji="";
 
-    public String getChannel() {
-        return channel;
+    public SlackMessage() {
+
     }
 
-    public void setChannel(String channel) {
-        this.channel = channel;
+    public SlackMessage(String username, String text, String icon_emoji) {
+        this.username = username;
+        this.text = text;
+        this.icon_emoji = icon_emoji;
     }
 
     public String getUsername() {
