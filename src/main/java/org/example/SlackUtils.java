@@ -6,7 +6,7 @@ import com.slack.api.webhook.WebhookResponse;
 import java.io.IOException;
 
 public class SlackUtils {
-    private final static String webhookUrl = "https://hooks.slack.com/services/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";
+    private final static String webhookUrl = "https://hooks.slack.com/services/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";
 
     public static WebhookResponse SlackSend(SlackMessage slackMessage) {
         try {
