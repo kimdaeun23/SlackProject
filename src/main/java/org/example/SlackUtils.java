@@ -1,27 +1,26 @@
 package org.example;
 
 import com.slack.api.Slack;
-import com.slack.api.webhook.Payload;
-import com.slack.api.webhook.WebhookResponse;
+import com.slack.api.methods.SlackApiException;
+import com.slack.api.methods.response.chat.ChatPostMessageResponse;
+import com.slack.api.model.Message;
+
 import java.io.IOException;
 
 public class SlackUtils {
-    private final static String webhookUrl = "https://hooks.slack.com/services/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";
 
-    public static WebhookResponse SlackSend(SlackMessage slackMessage) {
-        try {
-            WebhookResponse webhookResponse = null;
-            Slack slack = Slack.getInstance();
+    public static void sendSlack(SlackMessage slackMessage) throws SlackApiException, IOException {
+        Slack slack = Slack.getInstance();
 
-            String message=slackMessage.getUsername()+" : "+slackMessage.getText()+" "+slackMessage.getIcon_emoji();
-            Payload payload = Payload.builder().text(message).build();
-
-            webhookResponse = slack.send(webhookUrl, payload);
-            return webhookResponse;
+        ChatPostMessageResponse response = slack.methods(slackMessage.getToken()).chatPostMessage(req -> req
+                .channel(slackMessage.getChannel())
+                .text(String.valueOf(slackMessage.getText())));
+        if (response.isOk()) {
+            Message postedMessage = response.getMessage();
+            System.out.println("success: "+postedMessage);
+        } else {
+            String errorCode = response.getError();
+            System.out.println("error: "+errorCode);
         }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 }
