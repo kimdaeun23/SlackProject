@@ -4,13 +4,21 @@ import com.slack.api.Slack;
 import com.slack.api.methods.SlackApiException;
 import com.slack.api.methods.response.chat.ChatPostMessageResponse;
 import com.slack.api.model.Message;
+import com.slack.api.model.ModelConfigurator;
+import com.slack.api.model.block.ContextBlockElement;
+import com.slack.api.model.block.ImageBlock;
 import com.slack.api.model.block.LayoutBlock;
+import com.slack.api.model.block.element.BlockElement;
+import com.slack.api.model.block.element.BlockElements;
+import com.slack.api.model.block.element.ImageElement;
+import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.slack.api.model.block.Blocks.*;
+import static com.slack.api.model.block.Blocks.section;
 import static com.slack.api.model.block.composition.BlockCompositions.markdownText;
 import static com.slack.api.model.block.composition.BlockCompositions.plainText;
 import static com.slack.api.model.block.element.BlockElements.*;
@@ -33,32 +41,52 @@ public class SlackUtils {
         }
     }
 
-    //메시지 탬플릿(버튼) 전송
+    //메시지 탬플릿 전송
     public static void SendKit(SlackMessage slackMessage) throws IOException, SlackApiException {
-
+        String message;
         List<LayoutBlock> layoutBlocks = new ArrayList<>();
-        layoutBlocks.add(section(section -> section.text(markdownText("메시지 탬플릿"))));
-        layoutBlocks.add(divider());
-        layoutBlocks.add(
-                actions(actions -> actions
-                        .elements(asElements(
-                                button(b -> b.text(plainText(pt -> pt.emoji(true).text("승인")))
-                                        .value("v1")
-                                        .style("primary")
-                                        .actionId("action_approve")
-                                ),
-                                button(b -> b.text(plainText(pt -> pt.emoji(true).text("거부")))
-                                        .value("v2")
-                                        .style("danger")
-                                        .actionId("action_reject")
-                                )
 
-                        ))
+        //텍스트
+        if (slackMessage.getUrl()!=null){
+            message=slackMessage.getText()+"\n*<"+slackMessage.getUrl()+">*";
+        } else {
+            message = "";
+        }
+        //layoutBlocks.add(section(section -> section.text(markdownText(message))));
+
+        layoutBlocks.add(
+                section(section -> section
+                        .accessory(imageElement(i->i.imageUrl("https://api.slack.com/img/blocks/bkb_template_images/approvalsNewDevice.png")
+                                .altText("test")))
                 )
         );
+
+        //버튼
+//        if(slackMessage.getBtn1_name()!=null&&slackMessage.getBtn2_name()!=null) {
+//            layoutBlocks.add(divider());
+//            layoutBlocks.add(
+//                    actions(actions -> actions
+//                            .elements(asElements(
+//                                    button(b -> b.text(plainText(pt -> pt.emoji(true).text(slackMessage.getBtn1_name())))
+//                                            .value("v1")
+//                                            .style("primary")
+//                                            .url(slackMessage.getBtn1_url())
+//                                    ),
+//                                    button(b -> b.text(plainText(pt -> pt.emoji(true).text(slackMessage.getBtn2_name())))
+//                                            .value("v2")
+//                                            .style("danger")
+//                                            .url(slackMessage.getBtn2_url())
+//                                    )
+//
+//                            ))
+//                    )
+//            );
+//        }
+
+        //Slack전송
         ChatPostMessageResponse response = slack.methods(slackMessage.getToken()).chatPostMessage(req -> req
                 .channel(slackMessage.getChannel())
-                        .blocks(layoutBlocks));
+                .blocks(layoutBlocks));
         if (response.isOk()) {
             Message postedMessage = response.getMessage();
             System.out.println("success: "+postedMessage);
@@ -67,5 +95,4 @@ public class SlackUtils {
             System.out.println("error: "+errorCode);
         }
     }
-
 }
