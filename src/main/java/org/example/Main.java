@@ -8,7 +8,7 @@ public class Main {
 
         SlackMessage slackMessage=new SlackMessage();
         //사용자토큰(필수)
-        slackMessage.setToken("xoxp-1376359396183-4020602894023-4572175995456-599ba0d7d663e5e600f6780c7d0d4af1");
+        slackMessage.setToken("xoxp-1376359396183-4020602894023-4577810350033-e955deb324f924d8e8e116b413782792");
         //채널ID(필수)
         slackMessage.setChannel("C04FHJY8D63");
         //메시지내용(필수)

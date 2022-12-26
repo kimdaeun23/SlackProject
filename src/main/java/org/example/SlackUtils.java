@@ -47,15 +47,32 @@ public class SlackUtils {
         List<LayoutBlock> layoutBlocks = new ArrayList<>();
 
         //텍스트
-        if (slackMessage.getUrl()!=null){
+        if (!slackMessage.getUrl().equals("")){
             message=slackMessage.getText()+"\n*<"+slackMessage.getUrl()+">*";
+            layoutBlocks.add(section(section -> section.text(markdownText(message))));
         } else {
-            message = "";
+            layoutBlocks.add(section(section -> section.text(markdownText(slackMessage.getText()))));
         }
-        layoutBlocks.add(section(section -> section.text(markdownText(message))));
 
-        //버튼
-        if(slackMessage.getBtn1_name()!=null&&slackMessage.getBtn2_name()!=null) {
+        //버튼1
+        if(!slackMessage.getBtn1_name().equals("")&&slackMessage.getBtn2_name().equals("")) {
+            layoutBlocks.add(divider());
+            layoutBlocks.add(
+                    actions(actions -> actions
+                            .elements(asElements(
+                                    button(b -> b.text(plainText(pt -> pt.emoji(true).text(slackMessage.getBtn1_name())))
+                                            .value("v1")
+                                            .style("primary")
+                                            .url(slackMessage.getBtn1_url())
+                                    )
+
+                            ))
+                    )
+            );
+        }
+
+        //버튼1,2
+        if(!slackMessage.getBtn1_name().equals("")&&!slackMessage.getBtn2_name().equals("")) {
             layoutBlocks.add(divider());
             layoutBlocks.add(
                     actions(actions -> actions
@@ -76,7 +93,7 @@ public class SlackUtils {
             );
         }
 
-        if (slackMessage.getImage_url()!=null){
+        if (!slackMessage.getImage_url().equals("")){
             //이미지
             layoutBlocks.add(ImageBlock.builder().imageUrl(slackMessage.getImage_url()).altText(slackMessage.getImage_alt()).build());
         }

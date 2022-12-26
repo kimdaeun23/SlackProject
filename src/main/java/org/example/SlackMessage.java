@@ -7,12 +7,12 @@ public class SlackMessage implements Serializable {
     private String text="";
     private String token="";
     private String channel="";
-    private String btn1_name=null;
-    private String btn2_name=null;
-    private String btn1_url=null;
-    private String btn2_url=null;
-    private String url=null;
-    private String image_url=null;
+    private String btn1_name="";
+    private String btn2_name="";
+    private String btn1_url="";
+    private String btn2_url="";
+    private String url="";
+    private String image_url="";
     private String image_alt="";
 
     public String getImage_alt() {
