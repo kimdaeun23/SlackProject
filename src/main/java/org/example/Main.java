@@ -7,11 +7,11 @@ public class Main {
     public static void main(String[] args) throws IOException, SlackApiException {
 
         SlackMessage slackMessage=new SlackMessage();
-        //사용자토큰
-        slackMessage.setToken("xoxb-1376359396183-4544660391396-38Ps6DUMyxny4GiGE4MqKGMO");
-        //채널ID
+        //사용자토큰(필수)
+        slackMessage.setToken("xoxp-1376359396183-4020602894023-4572175995456-599ba0d7d663e5e600f6780c7d0d4af1");
+        //채널ID(필수)
         slackMessage.setChannel("C04FHJY8D63");
-        //메시지내용
+        //메시지내용(필수)
         slackMessage.setText("버튼을 클릭하세요.");
         //url링크
         slackMessage.setUrl("https://www.naver.com/");
@@ -21,10 +21,10 @@ public class Main {
         //버튼2
         slackMessage.setBtn2_name("버튼2");
         slackMessage.setBtn2_url("https://www.google.com/");
-
-
-        //텍스트 전송
-        //SlackUtils.SendText(slackMessage);
+        //이미지
+        slackMessage.setImage_url("https://pbs.twimg.com/profile_images/625633822235693056/lNGUneLX_400x400.jpg");
+        //이미지Alt
+        slackMessage.setImage_alt("test");
 
         //메시지 탬플릿 전송
         SlackUtils.SendKit(slackMessage);

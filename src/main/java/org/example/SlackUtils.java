@@ -52,41 +52,40 @@ public class SlackUtils {
         } else {
             message = "";
         }
-        //layoutBlocks.add(section(section -> section.text(markdownText(message))));
-
-        layoutBlocks.add(
-                section(section -> section
-                        .accessory(imageElement(i->i.imageUrl("https://api.slack.com/img/blocks/bkb_template_images/approvalsNewDevice.png")
-                                .altText("test")))
-                )
-        );
+        layoutBlocks.add(section(section -> section.text(markdownText(message))));
 
         //버튼
-//        if(slackMessage.getBtn1_name()!=null&&slackMessage.getBtn2_name()!=null) {
-//            layoutBlocks.add(divider());
-//            layoutBlocks.add(
-//                    actions(actions -> actions
-//                            .elements(asElements(
-//                                    button(b -> b.text(plainText(pt -> pt.emoji(true).text(slackMessage.getBtn1_name())))
-//                                            .value("v1")
-//                                            .style("primary")
-//                                            .url(slackMessage.getBtn1_url())
-//                                    ),
-//                                    button(b -> b.text(plainText(pt -> pt.emoji(true).text(slackMessage.getBtn2_name())))
-//                                            .value("v2")
-//                                            .style("danger")
-//                                            .url(slackMessage.getBtn2_url())
-//                                    )
-//
-//                            ))
-//                    )
-//            );
-//        }
+        if(slackMessage.getBtn1_name()!=null&&slackMessage.getBtn2_name()!=null) {
+            layoutBlocks.add(divider());
+            layoutBlocks.add(
+                    actions(actions -> actions
+                            .elements(asElements(
+                                    button(b -> b.text(plainText(pt -> pt.emoji(true).text(slackMessage.getBtn1_name())))
+                                            .value("v1")
+                                            .style("primary")
+                                            .url(slackMessage.getBtn1_url())
+                                    ),
+                                    button(b -> b.text(plainText(pt -> pt.emoji(true).text(slackMessage.getBtn2_name())))
+                                            .value("v2")
+                                            .style("danger")
+                                            .url(slackMessage.getBtn2_url())
+                                    )
+
+                            ))
+                    )
+            );
+        }
+
+        if (slackMessage.getImage_url()!=null){
+            //이미지
+            layoutBlocks.add(ImageBlock.builder().imageUrl(slackMessage.getImage_url()).altText(slackMessage.getImage_alt()).build());
+        }
 
         //Slack전송
         ChatPostMessageResponse response = slack.methods(slackMessage.getToken()).chatPostMessage(req -> req
                 .channel(slackMessage.getChannel())
                 .blocks(layoutBlocks));
+
         if (response.isOk()) {
             Message postedMessage = response.getMessage();
             System.out.println("success: "+postedMessage);
