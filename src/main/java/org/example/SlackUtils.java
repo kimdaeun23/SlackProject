@@ -64,7 +64,7 @@ public class SlackUtils {
     }
 
     //메시지 탬플릿 전송
-    public static void SendKit(SlackMessage slackMessage) throws IOException, SlackApiException {
+    public static void SendKit(SlackMessage slackMessage) throws Exception {
         String message;
         List<LayoutBlock> layoutBlocks = new ArrayList<>();
 
@@ -124,18 +124,44 @@ public class SlackUtils {
 
 
         //Slack전송
+        int index=-1;
+        index=slackMessage.getChannel().indexOf("@");
+        System.out.println(index);
 
-        ChatPostMessageResponse response1 = slack.methods(slackMessage.getToken()).chatPostMessage(req -> req
-                .channel(slackMessage.getChannel())
-                .blocks(layoutBlocks));
+        if(index!=-1) {
+            UsersLookupByEmailRequest.UsersLookupByEmailRequestBuilder builder = UsersLookupByEmailRequest.builder()
+                    .token(slackMessage.getToken()).email(slackMessage.getChannel());
 
-        if (response1.isOk()) {
-            Message postedMessage = response1.getMessage();
-            System.out.println("success: "+postedMessage);
-        } else {
-            String errorCode = response1.getError();
-            System.out.println("error: "+errorCode);
+            CompletableFuture<UsersLookupByEmailResponse> future = slack.methodsAsync().usersLookupByEmail(builder.build());
+
+            UsersLookupByEmailResponse response = future.get();
+
+            String userId=response.getUser().getId();
+            ChatPostMessageResponse response1 = slack.methods(slackMessage.getToken()).chatPostMessage(req -> req
+                    .channel(userId)
+                    .blocks(layoutBlocks));
+
+            if (response1.isOk()) {
+                Message postedMessage = response1.getMessage();
+                System.out.println("success: "+postedMessage);
+            } else {
+                String errorCode = response1.getError();
+                System.out.println("error: "+errorCode);
+            }
+        }else {
+            ChatPostMessageResponse response1 = slack.methods(slackMessage.getToken()).chatPostMessage(req -> req
+                    .channel(slackMessage.getChannel())
+                    .blocks(layoutBlocks));
+
+            if (response1.isOk()) {
+                Message postedMessage = response1.getMessage();
+                System.out.println("success: "+postedMessage);
+            } else {
+                String errorCode = response1.getError();
+                System.out.println("error: "+errorCode);
+            }
         }
+
     }
 
 }
