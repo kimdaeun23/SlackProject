@@ -1,18 +1,20 @@
 package org.example;
 
 import com.slack.api.methods.SlackApiException;
+import com.slack.api.methods.response.users.UsersLookupByEmailResponse;
+
 import java.io.IOException;
 
 public class Main {
-    public static void main(String[] args) throws IOException, SlackApiException {
+    public static void main(String[] args) throws Exception {
 
         SlackMessage slackMessage=new SlackMessage();
         //사용자토큰(필수)
-        slackMessage.setToken("xoxp-1376359396183-4020602894023-4577810350033-e955deb324f924d8e8e116b413782792");
+        slackMessage.setToken("xoxp-1376359396183-4020602894023-4612223807363-b66a1fdbf37dd9184c67657c931bac3d");
         //채널ID(필수)
-        slackMessage.setChannel("C04FHJY8D63");
+        //slackMessage.setChannel("C04FHJY8D63");
         //메시지내용(필수)
-        slackMessage.setText("버튼을 클릭하세요.");
+        slackMessage.setText("엥뭐야된거야?");
         //url링크
         slackMessage.setUrl("https://www.naver.com/");
         //버튼1
@@ -26,7 +28,11 @@ public class Main {
         //이미지Alt
         slackMessage.setImage_alt("test");
 
+        UsersLookupByEmailResponse response=SlackUtils.getUser("es-kbsys37@hybecorp.com");
+        String a=response.getUser().getId();
+        slackMessage.setChannel(a);
         //메시지 탬플릿 전송
         SlackUtils.SendKit(slackMessage);
+
     }
 }
